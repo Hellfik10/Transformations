@@ -1,11 +1,24 @@
 using UnityEngine;
+using DG.Tweening;
 
 public class Rotator : MonoBehaviour
 {
-    [SerializeField] private float _speed;
+    [SerializeField] private float _duration = 3f;
 
-    private void Update()
+    private Tween _rotationTween;
+
+    private void Start()
     {
-        transform.Rotate(Vector3.up * _speed * Time.deltaTime);
+        _rotationTween = transform.DORotate(
+                transform.eulerAngles + new Vector3(0f, 360f, 0f),
+                _duration,
+                RotateMode.FastBeyond360)
+            .SetEase(Ease.Linear)
+            .SetLoops(-1, LoopType.Restart);
+    }
+
+    private void OnDestroy()
+    {
+        _rotationTween?.Kill();
     }
 }
